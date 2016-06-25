@@ -18,7 +18,8 @@
 
 package com.robo4j.demo.joystick.events.enums;
 
-import com.robo4j.demo.joystick.events.JoystickEventHolder;
+import com.robo4j.demo.joystick.events.JoystickEvent;
+
 import javafx.event.EventType;
 import javafx.scene.input.InputEvent;
 
@@ -31,6 +32,7 @@ import javafx.scene.input.InputEvent;
  *
  * @since 25/06/16
  */
+@Deprecated
 public enum JoystickEventEnum {
 
     //@formatter:off
@@ -40,9 +42,9 @@ public enum JoystickEventEnum {
     ;
     //@formatter:on
     private final int id;
-    private final EventType<JoystickEventHolder>  eventType;
+    private final EventType<JoystickEvent>  eventType;
 
-    JoystickEventEnum(int id, EventType<JoystickEventHolder> eventType){
+    JoystickEventEnum(int id, EventType<JoystickEvent> eventType){
         this.id = id;
         this.eventType = eventType;
     }
@@ -51,7 +53,7 @@ public enum JoystickEventEnum {
         return id;
     }
 
-    public EventType<JoystickEventHolder> getEventType() {
+    public EventType<JoystickEvent> getEventType() {
         return eventType;
     }
 

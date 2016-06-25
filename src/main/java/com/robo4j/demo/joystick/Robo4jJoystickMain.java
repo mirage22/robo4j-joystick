@@ -18,10 +18,10 @@
 
 package com.robo4j.demo.joystick;
 
-import com.robo4j.core.control.ControlPad;
-import com.robo4j.demo.joystick.events.enums.JoystickEventEnum;
-import com.robo4j.demo.joystick.layout.JoystickPane;
+import com.robo4j.demo.joystick.events.JoystickEvent;
+import com.robo4j.demo.joystick.layout.Joystick;
 import com.robo4j.demo.joystick.task.RoboAddressTask;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -33,8 +33,6 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Main Class of the Robo4j-joystick JavaFx demo
@@ -56,6 +54,7 @@ import org.slf4j.LoggerFactory;
 public class Robo4jJoystickMain extends Application {
     private static final Logger logger = LoggerFactory.getLogger(Robo4jJoystickMain.class);
     private static final int ROTATION_ANGEL = 90;
+    private static final int LEVELS = 3;
     private ControlPad controlPad;
     private StringProperty ipLabelProperty;
     private Label connectLabel;
@@ -70,8 +69,8 @@ public class Robo4jJoystickMain extends Application {
         HBox hBox = getHBox();
         borderPane.setTop(hBox);
 
-        JoystickPane joystickPane = new JoystickPane(ROTATION_ANGEL);
-        joystickPane.addEventHandler(JoystickEventEnum.QUADRANT_CHANGED.getEventType(), e -> {
+        Joystick joystickPane = new Joystick(ROTATION_ANGEL, LEVELS);
+        joystickPane.addEventHandler(JoystickEvent.QUADRANT_CHANGED, e -> {
             switch (e.getQuadrant()){
                 case NONE:
                     controlPad.sendCommandLine("A:stop");
@@ -92,7 +91,7 @@ public class Robo4jJoystickMain extends Application {
                     throw new IllegalStateException("no such quadrant");
             }
         });
-        joystickPane.addEventHandler(JoystickEventEnum.LEVEL_CHANGED.getEventType(),
+        joystickPane.addEventHandler(JoystickEvent.LEVEL_CHANGED,
                 e -> logger.info("LEVEL" +  e.getJoystickLevel()));
         borderPane.setCenter(joystickPane);
 

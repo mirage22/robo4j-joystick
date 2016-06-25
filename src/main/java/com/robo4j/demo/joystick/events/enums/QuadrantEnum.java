@@ -25,24 +25,35 @@ package com.robo4j.demo.joystick.events.enums;
  * @since 25/06/16
  */
 public enum QuadrantEnum {
-
     // @formatter:off
-    //name          id
-    QUADRANT_I      (1),
-    QUADRANT_II     (2),
-    QUADRANT_III    (3),
-    QUADRANT_IV     (4),
-    NONE            (0),
+    //name          id,     start angle,    end angle
+    NONE            (0,     0,              0),
+    QUADRANT_I      (1,     0,              90),
+    QUADRANT_II     (2,     90,             90),
+    QUADRANT_III    (3,     180,            90),
+    QUADRANT_IV     (4,     270,            90), 
     ;
-    // @formatter:on
+// @formatter:on
 
     private int quadrant;
+    private int startAngle;
+    private int angleExtend;
 
-    QuadrantEnum(int q) {
+    private QuadrantEnum(int q, int startAngle, int angleExtend) {
         quadrant = q;
+        this.startAngle = startAngle;
+        this.angleExtend = angleExtend;
     }
 
     public int getQuadrant() {
         return quadrant;
+    }
+
+    public int getAngleExtend() {
+        return angleExtend;
+    }
+
+    public int getStartAngle() {
+        return startAngle;
     }
 }

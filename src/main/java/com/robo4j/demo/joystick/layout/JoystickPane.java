@@ -20,6 +20,7 @@ package com.robo4j.demo.joystick.layout;
 
 import com.robo4j.demo.joystick.JoystickEventProducer;
 import com.robo4j.demo.joystick.util.MoveCalculatorUtil;
+
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.Canvas;
@@ -36,6 +37,7 @@ import javafx.scene.shape.Circle;
  *
  * @since 25/06/16
  */
+@Deprecated
 public class JoystickPane extends Pane {
 
     private DoubleProperty radiusProperty;

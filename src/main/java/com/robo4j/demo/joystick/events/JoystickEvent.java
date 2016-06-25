@@ -18,8 +18,8 @@
 
 package com.robo4j.demo.joystick.events;
 
-import com.robo4j.demo.joystick.events.enums.LevelEnum;
 import com.robo4j.demo.joystick.events.enums.QuadrantEnum;
+
 import javafx.event.EventTarget;
 import javafx.event.EventType;
 import javafx.scene.input.InputEvent;
@@ -30,17 +30,20 @@ import javafx.scene.input.InputEvent;
  * @author Choustoulakis Nikolaos
  * @since 11.06.16
  */
-public class JoystickEventHolder extends InputEvent {
+public class JoystickEvent extends InputEvent {
 
     private static final long serialVersionUID = 2231266847422883646L;
+    public static final EventType<JoystickEvent> ANY = new EventType<>(InputEvent.ANY, "POV");
+    public static final EventType<JoystickEvent> QUADRANT_CHANGED = new EventType<>(InputEvent.ANY, "CHANGE_QUADRANT");
+    public static final EventType<JoystickEvent> LEVEL_CHANGED = new EventType<>(InputEvent.ANY, "LEVEL_CHANGED");
 
     private transient double x;
     private transient double y;
     private transient QuadrantEnum quadrant;
-    private transient LevelEnum joystickLevel;
+    private transient int joystickLevel;
 
-    public JoystickEventHolder(Object source, EventTarget target, EventType<? extends JoystickEventHolder> eventType, double x, double y, QuadrantEnum quadrant,
-                               LevelEnum joystickLevel) {
+    public JoystickEvent(Object source, EventTarget target, EventType<? extends JoystickEvent> eventType, double x, double y, QuadrantEnum quadrant,
+            int joystickLevel) {
         super(source, target, eventType);
         this.x = x;
         this.y = y;
@@ -60,7 +63,7 @@ public class JoystickEventHolder extends InputEvent {
         return quadrant;
     }
 
-    public final LevelEnum getJoystickLevel() {
+    public final int getJoystickLevel() {
         return joystickLevel;
     }
 

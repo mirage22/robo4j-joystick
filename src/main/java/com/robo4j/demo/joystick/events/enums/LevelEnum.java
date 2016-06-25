@@ -23,6 +23,7 @@ package com.robo4j.demo.joystick.events.enums;
  *
  * @since 25/06/16
  */
+@Deprecated
 public enum LevelEnum {
 
     //@formatter:off
