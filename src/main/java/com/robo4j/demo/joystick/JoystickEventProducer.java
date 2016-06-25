@@ -54,8 +54,7 @@ public final class JoystickEventProducer implements EventHandler<MouseEvent> {
     private QuadrantEnum quadrantBefore = QuadrantEnum.NONE;
 
     public JoystickEventProducer(Node node, DoubleProperty povCenterXProperty, DoubleProperty povCenterYProperty, DoubleProperty povCenterXLayoutProperty,
-            DoubleProperty povCenterYLayoutProperty,
-            Map<Integer, IntegerProperty> levels) {
+            DoubleProperty povCenterYLayoutProperty, Map<Integer, IntegerProperty> levels) {
         this.node = node;
         this.levels = levels;
         this.povCenterXProperty = povCenterXProperty;

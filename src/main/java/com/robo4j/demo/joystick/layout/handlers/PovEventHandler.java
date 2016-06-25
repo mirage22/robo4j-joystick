@@ -1,16 +1,12 @@
 package com.robo4j.demo.joystick.layout.handlers;
 
+import com.robo4j.demo.joystick.util.MoveCalculatorUtil;
+
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Circle;
-import remote.javafx.ui.util.PovCalculator;
 
 public class PovEventHandler {
-    private PovCalculator calculator;
-
-    public PovEventHandler() {
-        calculator = new PovCalculator();
-    }
 
     public void bindPovToCanvas(Circle pov, DoubleProperty povCenteXProperty, DoubleProperty povCenteYProperty) {
         pov.setCenterX(povCenteXProperty.get());
@@ -22,12 +18,12 @@ public class PovEventHandler {
         double mouseX = e.getX();
         double mouseY = e.getY();
 
-        if (calculator.isInsideCircleArea(radiusProperty.get() - povRadius.get(), mouseX, mouseY, povCenteXProperty.get(), povCenteYProperty.get())) {
-            double x = calculator.resetToCenterX(mouseX, povCenteXProperty.get());
-            double y = calculator.resetToCenterY(mouseY, povCenteYProperty.get());
-            double angle = calculator.determinAngle(x, y);
-            pov.setCenterX(calculator.determinePointXOnCircleCircumference(angle, radiusProperty.get() - povRadius.get(), povCenteXProperty.get()));
-            pov.setCenterY(calculator.determinePointYOnCircleCircumference(angle, radiusProperty.get() - povRadius.get(), povCenteYProperty.get()));
+        if (MoveCalculatorUtil.isInsideCircleArea(radiusProperty.get() - povRadius.get(), mouseX, mouseY, povCenteXProperty.get(), povCenteYProperty.get())) {
+            double x = MoveCalculatorUtil.resetToCenterX(mouseX, povCenteXProperty.get());
+            double y = MoveCalculatorUtil.resetToCenterY(mouseY, povCenteYProperty.get());
+            double angle = MoveCalculatorUtil.determineAngle(x, y);
+            pov.setCenterX(MoveCalculatorUtil.determinePointXOnCircleCircumference(angle, radiusProperty.get() - povRadius.get(), povCenteXProperty.get()));
+            pov.setCenterY(MoveCalculatorUtil.determinePointYOnCircleCircumference(angle, radiusProperty.get() - povRadius.get(), povCenteYProperty.get()));
             return;
         }
         pov.setCenterX(mouseX);
