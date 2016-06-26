@@ -40,17 +40,13 @@ public class LegoBrickSetupProperties implements LegoBrickProperties, RoboSystem
     private Map<String, String> bricks;
     private String corePackage;
     private String enginePackage;
-    private String commandPackage;
-    private String sensorPackage;
 
     public LegoBrickSetupProperties() {
         final Map<String, String> bricks = new HashMap<>();
-        bricks.put(LegoBrickPropertiesHolder.BRICK_IP_1, "192.168.178.26");
+        bricks.put(LegoBrickPropertiesHolder.BRICK_IP_1, "<ROBOT_IP>");
         this.bricks = bricks;
         this.corePackage = "com.robo4j.demo.joystick";
-        this.commandPackage = "com.robo4j.demo.joystick.commands";
         this.enginePackage = "com.robo4j.demo.joystick.engine";
-        this.sensorPackage = "com.robo4j.demo.joystick.sensor";
     }
 
     @Override
@@ -65,7 +61,7 @@ public class LegoBrickSetupProperties implements LegoBrickProperties, RoboSystem
 
     @Override
     public String getCommandPackage() {
-        return commandPackage;
+        return null;
     }
 
     @Override
@@ -75,15 +71,15 @@ public class LegoBrickSetupProperties implements LegoBrickProperties, RoboSystem
 
     @Override
     public String getSensorPackage() {
-        return sensorPackage;
+        return null;
     }
 
     @Override
     public String toString() {
-        return "LegoBrickPropertiesTest{" +
+        return "LegoBrickSetupProperties{" +
                 "bricks=" + bricks +
                 ", corePackage='" + corePackage + '\'' +
-                ", commandPackage='" + commandPackage + '\'' +
+                ", enginePackage='" + enginePackage + '\'' +
                 '}';
     }
 }
