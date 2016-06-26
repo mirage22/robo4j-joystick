@@ -56,9 +56,13 @@ import org.slf4j.LoggerFactory;
 public class Robo4jJoystickMain extends Application {
     private static final Logger logger = LoggerFactory.getLogger(Robo4jJoystickMain.class);
     private static final int ROTATION_ANGEL = 90;
+    private static final String CONNECT = "Connect";
+    private static final String CLOSE = "Close";
     private ControlPad controlPad;
     private StringProperty ipLabelProperty;
     private Label connectLabel;
+    private Button buttonConnect;
+
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -117,7 +121,7 @@ public class Robo4jJoystickMain extends Application {
         result.setSpacing(10); // Gap between nodes
         result.setStyle("-fx-background-color: #336699;");
 
-        Button buttonConnect = new Button("Open");
+        buttonConnect = new Button(CONNECT);
         buttonConnect.setPrefSize(100, 20);
         buttonConnect.setOnAction((event) -> handleConnectButtonOnAction());
 
@@ -137,9 +141,13 @@ public class Robo4jJoystickMain extends Application {
         if(!controlPad.isActive() && available){
             controlPad.activate();
             connectLabel.textProperty().bind(ipLabelProperty);
+            buttonConnect.setText(CLOSE);
+
             Platform.runLater(this::runAsyncLabelUpdate);
         } else if(controlPad.isActive()){
             controlPad.sendCommandLine("A:exit");
+            buttonConnect.setText(CONNECT);
+
 
         } else {
             logger.info("NOT AVAILABLE BRICK");
