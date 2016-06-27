@@ -129,7 +129,7 @@ public class Robo4jJoystickMain extends Application {
 
 
         connectLabel = new Label();
-        connectLabel.setPrefSize(100, 20);
+        connectLabel.setPrefSize(150, 20);
         connectLabel.setText("IP ADDRESS");
 
 
@@ -164,7 +164,7 @@ public class Robo4jJoystickMain extends Application {
     private void runAsyncLabelUpdate(){
         final RoboAddressTask updateIpLabel = new RoboAddressTask(controlPad);
         ipLabelProperty.bind(updateIpLabel.messageProperty());
-        controlPad.submitToSensorBus(updateIpLabel);
+        controlPad.executeToSensorBus(updateIpLabel);
 
     }
 
