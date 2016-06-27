@@ -54,10 +54,12 @@ import org.slf4j.LoggerFactory;
  */
 
 public class Robo4jJoystickMain extends Application {
+    private static final String NOT_AVAILABLE = "NOT AVAILABLE";
     private static final Logger logger = LoggerFactory.getLogger(Robo4jJoystickMain.class);
     private static final int ROTATION_ANGEL = 90;
     private static final String CONNECT = "Connect";
     private static final String CLOSE = "Close";
+
     private ControlPad controlPad;
     private StringProperty ipLabelProperty;
     private Label connectLabel;
@@ -138,22 +140,22 @@ public class Robo4jJoystickMain extends Application {
 
     private void handleConnectButtonOnAction(){
         final boolean available = controlPad.getConnectionState();
+        if(!available){
+            connectLabel.setText(NOT_AVAILABLE);
+        }
+
         if(!controlPad.isActive() && available){
             controlPad.activate();
             connectLabel.textProperty().bind(ipLabelProperty);
-            buttonConnect.setText(CLOSE);
-
             Platform.runLater(this::runAsyncLabelUpdate);
+            buttonConnect.setText(CLOSE);
         } else if(controlPad.isActive()){
             controlPad.sendCommandLine("A:exit");
             buttonConnect.setText(CONNECT);
 
-
         } else {
-            logger.info("NOT AVAILABLE BRICK");
+            logger.info(NOT_AVAILABLE);
         }
-
-
     }
 
     /**
