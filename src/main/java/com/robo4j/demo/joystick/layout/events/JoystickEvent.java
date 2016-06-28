@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2016. Miroslav Kopecky
- * This JoystickEventHolder.java is part of Robo4j and robo4j-joystick
+ * This JoystickEvent.java is part of Robo4j and robo4j-joystick
  *
  *     robo4j-joystick is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -16,10 +16,11 @@
  *     along with Robo4j and robo4j-joystick .  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.robo4j.demo.joystick.events;
+package com.robo4j.demo.joystick.layout.events;
 
-import com.robo4j.demo.joystick.events.enums.LevelEnum;
-import com.robo4j.demo.joystick.events.enums.QuadrantEnum;
+import com.robo4j.demo.joystick.layout.events.enums.JoystickEventEnum;
+import com.robo4j.demo.joystick.layout.events.enums.QuadrantEnum;
+
 import javafx.event.EventTarget;
 import javafx.event.EventType;
 import javafx.scene.input.InputEvent;
@@ -28,20 +29,23 @@ import javafx.scene.input.InputEvent;
  * Event holder holds information about joystick position on the canvas
  * 
  * @author Choustoulakis Nikolaos
- * @since 11.06.16
+ * @author Miro Kopecky (@miragemiko)
+ * @since 11.06.2016
  */
-public class JoystickEventHolder extends InputEvent {
+public class JoystickEvent extends InputEvent {
 
     private static final long serialVersionUID = 2231266847422883646L;
 
     private transient double x;
     private transient double y;
     private transient QuadrantEnum quadrant;
-    private transient LevelEnum joystickLevel;
+    private transient int joystickLevel;
 
-    public JoystickEventHolder(Object source, EventTarget target, EventType<? extends JoystickEventHolder> eventType, double x, double y, QuadrantEnum quadrant,
-                               LevelEnum joystickLevel) {
-        super(source, target, eventType);
+    public JoystickEvent(Object source, EventTarget target,
+                         JoystickEventEnum eventType,
+                         double x, double y, QuadrantEnum quadrant,
+                         int joystickLevel) {
+        super(source, target, eventType.getEventType());
         this.x = x;
         this.y = y;
         this.quadrant = quadrant;
@@ -60,7 +64,7 @@ public class JoystickEventHolder extends InputEvent {
         return quadrant;
     }
 
-    public final LevelEnum getJoystickLevel() {
+    public final int getJoystickLevel() {
         return joystickLevel;
     }
 

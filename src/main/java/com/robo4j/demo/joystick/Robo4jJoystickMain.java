@@ -19,8 +19,8 @@
 package com.robo4j.demo.joystick;
 
 import com.robo4j.core.control.ControlPad;
-import com.robo4j.demo.joystick.events.enums.JoystickEventEnum;
-import com.robo4j.demo.joystick.layout.JoystickPane;
+import com.robo4j.demo.joystick.layout.Joystick;
+import com.robo4j.demo.joystick.layout.events.enums.JoystickEventEnum;
 import com.robo4j.demo.joystick.task.RoboAddressTask;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -58,6 +58,7 @@ public class Robo4jJoystickMain extends Application {
     private static final int ROTATION_ANGEL = 90;
     private static final String CONNECT = "Connect";
     private static final String CLOSE = "Close";
+    private static final int LEVELS = 3;
     private ControlPad controlPad;
     private StringProperty ipLabelProperty;
     private Label connectLabel;
@@ -74,7 +75,7 @@ public class Robo4jJoystickMain extends Application {
         HBox hBox = getHBox();
         borderPane.setTop(hBox);
 
-        JoystickPane joystickPane = new JoystickPane(ROTATION_ANGEL);
+        Joystick joystickPane = new Joystick(ROTATION_ANGEL, LEVELS);
         joystickPane.addEventHandler(JoystickEventEnum.QUADRANT_CHANGED.getEventType(), e -> {
             switch (e.getQuadrant()){
                 case NONE:
@@ -162,7 +163,7 @@ public class Robo4jJoystickMain extends Application {
     private void runAsyncLabelUpdate(){
         final RoboAddressTask updateIpLabel = new RoboAddressTask(controlPad);
         ipLabelProperty.bind(updateIpLabel.messageProperty());
-        controlPad.submitToSensorBus(updateIpLabel);
+        controlPad.executeToSensorBus(updateIpLabel);
 
     }
 
