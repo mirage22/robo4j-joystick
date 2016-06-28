@@ -13,11 +13,11 @@ public class PovEventHandler {
         pov.setCenterY(povCenteYProperty.get());
     }
 
-    public void draggedPov(MouseEvent e, Circle pov, DoubleProperty radiusProperty, DoubleProperty povRadius, DoubleProperty povCenteXProperty,
+    public void draggedPov(MouseEvent e, Circle pov, DoubleProperty radiusProperty, DoubleProperty povCenteXProperty,
             DoubleProperty povCenteYProperty) {
         double mouseX = e.getX();
         double mouseY = e.getY();
-
+        DoubleProperty povRadius = pov.radiusProperty();
         if (MoveCalculatorUtil.isInsideCircleArea(radiusProperty.get() - povRadius.get(), mouseX, mouseY, povCenteXProperty.get(), povCenteYProperty.get())) {
             double x = MoveCalculatorUtil.resetToCenterX(mouseX, povCenteXProperty.get());
             double y = MoveCalculatorUtil.resetToCenterY(mouseY, povCenteYProperty.get());

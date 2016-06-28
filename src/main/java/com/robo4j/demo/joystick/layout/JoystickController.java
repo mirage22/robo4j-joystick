@@ -17,28 +17,27 @@ import javafx.scene.input.MouseEvent;
 
 public class JoystickController {
 
-    private Joystick joystick;
+    protected Joystick joystick;
 
-    private Map<Integer, IntegerProperty> levels;
-    private DoubleProperty radiusProperty;
-    private DoubleProperty povRadius;
-    private DoubleProperty povCenteXProperty;
-    private DoubleProperty povCenteYProperty;
+    protected Map<Integer, IntegerProperty> levels;
+    protected DoubleProperty radiusProperty;
+    protected DoubleProperty povCenteXProperty;
+    protected DoubleProperty povCenteYProperty;
 
-    private JoystickEventProducer eventProducer;
-    private RadarEventHandler radarEventHandler;
-    private PovEventHandler povEventHandler;
+    protected JoystickEventProducer eventProducer;
+    protected RadarEventHandler radarEventHandler;
+    protected PovEventHandler povEventHandler;
 
-    public JoystickController(final double radius, final int levelNumber, final Joystick joystick) {
+    public JoystickController(final Joystick joystick) {
         this.joystick = joystick;
-        initProperties(radius, levelNumber);
+        initProperties(joystick.getRadius(), joystick.getLevels());
         bindingPropertie();
         addCanvasListener();
         initHandlers();
         addPovlistener();
         povEventHandling();
 
-        radiusProperty.set(radius);
+        radiusProperty.set(joystick.getRadius());
     }
 
     private void povEventHandling() {
@@ -56,7 +55,6 @@ public class JoystickController {
                         i -> i, 
                         i ->createProperty(radius, levelNumber, i+1)));
         //@formatter:on
-        povRadius = new SimpleDoubleProperty();
         povCenteXProperty = new SimpleDoubleProperty();
         povCenteYProperty = new SimpleDoubleProperty();
     }
@@ -69,8 +67,7 @@ public class JoystickController {
 
     private void bindingPropertie() {
 
-        povRadius.bind(radiusProperty.divide(levels.size()).divide(2));
-        joystick.getPov().radiusProperty().bindBidirectional(povRadius);
+        joystick.getPov().radiusProperty().bind(radiusProperty.divide(levels.size()).divide(2));
         povCenteXProperty.bind(radiusProperty.add(joystick.getCanvas().layoutXProperty()));
         povCenteYProperty.bind(radiusProperty.add(joystick.getCanvas().layoutYProperty()));
 
@@ -88,15 +85,14 @@ public class JoystickController {
     }
 
     private void addPovlistener() {
-        joystick.getPov().addEventHandler(MouseEvent.MOUSE_DRAGGED, (e) -> {
-            povEventHandler.draggedPov(e, joystick.getPov(), radiusProperty, povRadius, povCenteXProperty, povCenteYProperty);
-        });
+        joystick.getPov().addEventHandler(MouseEvent.MOUSE_DRAGGED,
+                (e) -> povEventHandler.draggedPov(e, joystick.getPov(), radiusProperty, povCenteXProperty, povCenteYProperty));
         joystick.getPov().setOnMouseReleased(e -> povEventHandler.bindPovToCanvas(joystick.getPov(), povCenteXProperty, povCenteYProperty));
     }
 
     private void addCanvasListener() {
         joystick.getCanvas().addEventHandler(MouseEvent.MOUSE_DRAGGED, (e) -> {
-            radarEventHandler.onMouseDragged(e, joystick.getCanvas(), joystick.getPov(), povCenteXProperty, povCenteYProperty);
+            radarEventHandler.onMouseDragged(joystick.getPov(), povCenteXProperty, povCenteYProperty);
         });
         joystick.addEventHandler(JoystickEvent.QUADRANT_CHANGED, e -> {
             radarEventHandler.drawTargetLevel(e, joystick.getCanvas(), radiusProperty, levels);

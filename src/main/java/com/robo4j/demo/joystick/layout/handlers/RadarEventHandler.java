@@ -8,7 +8,6 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ZoomEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
@@ -16,7 +15,7 @@ import javafx.scene.shape.Circle;
 
 public class RadarEventHandler {
 
-    public void onMouseDragged(MouseEvent e, Canvas canvas, Circle pov, DoubleProperty povCenteXProperty, DoubleProperty povCenteYProperty) {
+    public void onMouseDragged(Circle pov, DoubleProperty povCenteXProperty, DoubleProperty povCenteYProperty) {
         pov.setCenterX(povCenteXProperty.get());
         pov.setCenterY(povCenteYProperty.get());
     }
