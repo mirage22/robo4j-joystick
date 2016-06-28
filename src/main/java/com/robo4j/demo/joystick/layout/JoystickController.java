@@ -15,7 +15,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.input.MouseEvent;
 
-public class joystickController {
+public class JoystickController {
 
     private Joystick joystick;
 
@@ -29,7 +29,7 @@ public class joystickController {
     private RadarEventHandler radarEventHandler;
     private PovEventHandler povEventHandler;
 
-    public joystickController(final double radius, final int levelNumber, final Joystick joystick) {
+    public JoystickController(final double radius, final int levelNumber, final Joystick joystick) {
         this.joystick = joystick;
         initProperties(radius, levelNumber);
         bindingPropertie();

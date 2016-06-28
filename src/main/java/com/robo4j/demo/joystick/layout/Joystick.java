@@ -14,7 +14,7 @@ public class Joystick extends Group {
         pov = new Circle(0, Color.BLACK);
         canvas = new Canvas(radius * 2, radius * 2);
         getChildren().addAll(canvas, pov);
-        new joystickController(radius, levelNumber, this);
+        new JoystickController(radius, levelNumber, this);
     }
 
     public Circle getPov() {
