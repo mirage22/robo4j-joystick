@@ -16,7 +16,7 @@
  *     along with Robo4j and robo4j-joystick .  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.robo4j.demo.joystick.events.enums;
+package com.robo4j.demo.joystick.layout.events.enums;
 
 /**
  * @author Choustoulakis Nikolaos (@eppnikos)

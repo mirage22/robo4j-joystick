@@ -16,9 +16,9 @@
  *     along with Robo4j and robo4j-joystick .  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.robo4j.demo.joystick.events;
+package com.robo4j.demo.joystick.layout.events;
 
-import com.robo4j.demo.joystick.events.enums.QuadrantEnum;
+import com.robo4j.demo.joystick.layout.events.enums.QuadrantEnum;
 
 import javafx.event.EventTarget;
 import javafx.event.EventType;

@@ -4,10 +4,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import com.robo4j.demo.joystick.JoystickEventProducer;
-import com.robo4j.demo.joystick.events.JoystickEvent;
+import com.robo4j.demo.joystick.layout.events.JoystickEvent;
 import com.robo4j.demo.joystick.layout.handlers.PovEventHandler;
 import com.robo4j.demo.joystick.layout.handlers.RadarEventHandler;
+import com.robo4j.demo.joystick.layout.util.JoystickEventProducer;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;

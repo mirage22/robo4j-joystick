@@ -1,6 +1,6 @@
 package com.robo4j.demo.joystick.layout.handlers;
 
-import com.robo4j.demo.joystick.util.MoveCalculatorUtil;
+import com.robo4j.demo.joystick.layout.util.MoveCalculatorUtil;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.input.MouseEvent;

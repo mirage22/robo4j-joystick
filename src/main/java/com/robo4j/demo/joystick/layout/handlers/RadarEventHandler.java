@@ -2,7 +2,7 @@ package com.robo4j.demo.joystick.layout.handlers;
 
 import java.util.Map;
 
-import com.robo4j.demo.joystick.events.JoystickEvent;
+import com.robo4j.demo.joystick.layout.events.JoystickEvent;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;

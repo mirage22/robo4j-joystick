@@ -16,13 +16,12 @@
  *     along with Robo4j and robo4j-joystick .  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.robo4j.demo.joystick;
+package com.robo4j.demo.joystick.layout.util;
 
 import java.util.Map;
 
-import com.robo4j.demo.joystick.events.JoystickEvent;
-import com.robo4j.demo.joystick.events.enums.QuadrantEnum;
-import com.robo4j.demo.joystick.util.MoveCalculatorUtil;
+import com.robo4j.demo.joystick.layout.events.JoystickEvent;
+import com.robo4j.demo.joystick.layout.events.enums.QuadrantEnum;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;

@@ -18,8 +18,8 @@
 
 package com.robo4j.demo.joystick;
 
-import com.robo4j.demo.joystick.events.JoystickEvent;
 import com.robo4j.demo.joystick.layout.Joystick;
+import com.robo4j.demo.joystick.layout.events.JoystickEvent;
 import com.robo4j.demo.joystick.task.RoboAddressTask;
 
 import javafx.application.Application;
