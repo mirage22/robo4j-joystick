@@ -16,14 +16,16 @@
  *     along with Robo4j and robo4j-joystick .  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.robo4j.demo.joystick;
+package com.robo4j.demo.joystick.layout.util;
 
-import com.robo4j.demo.joystick.events.enums.JoystickEventEnum;
-import com.robo4j.demo.joystick.events.enums.LevelEnum;
-import com.robo4j.demo.joystick.events.enums.QuadrantEnum;
-import com.robo4j.demo.joystick.util.EventUtil;
-import com.robo4j.demo.joystick.util.MoveCalculatorUtil;
+import java.util.Map;
+
+import com.robo4j.demo.joystick.layout.events.JoystickEvent;
+import com.robo4j.demo.joystick.layout.events.enums.JoystickEventEnum;
+import com.robo4j.demo.joystick.layout.events.enums.QuadrantEnum;
+
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
@@ -34,7 +36,7 @@ import javafx.scene.input.MouseEvent;
  * @author Choustoulakis Nikolaos (@eppnikos)
  * @author Miro Kopecky (@miragemiko)
  *
- * @since 25/06/16
+ * @since 25.06.2016
  */
 public final class JoystickEventProducer implements EventHandler<MouseEvent> {
 
@@ -42,23 +44,19 @@ public final class JoystickEventProducer implements EventHandler<MouseEvent> {
     private double beforeX = 0;
     private double beforeY = 0;
 
-    private DoubleProperty levelIRadius;
-    private DoubleProperty levelIIRadius;
     private DoubleProperty povCenterXProperty;
     private DoubleProperty povCenterYProperty;
     private DoubleProperty povCenterXLayoutProperty;
     private DoubleProperty povCenterYLayoutProperty;
+    private Map<Integer, IntegerProperty> levels;
 
-    private LevelEnum joystickLevelBefore = LevelEnum.NONE;
+    private int joystickLevelBefore = 0;
     private QuadrantEnum quadrantBefore = QuadrantEnum.NONE;
 
-    public JoystickEventProducer(Node node, DoubleProperty levelIRadius, DoubleProperty levelIIRadius, DoubleProperty povCenterXProperty,
-                                 DoubleProperty povCenterYProperty, DoubleProperty povCenterXLayoutProperty,
-                                 DoubleProperty povCenterYLayoutProperty) {
-
+    public JoystickEventProducer(Node node, DoubleProperty povCenterXProperty, DoubleProperty povCenterYProperty, DoubleProperty povCenterXLayoutProperty,
+            DoubleProperty povCenterYLayoutProperty, Map<Integer, IntegerProperty> levels) {
         this.node = node;
-        this.levelIRadius = levelIRadius;
-        this.levelIIRadius = levelIIRadius;
+        this.levels = levels;
         this.povCenterXProperty = povCenterXProperty;
         this.povCenterYProperty = povCenterYProperty;
         this.povCenterXLayoutProperty = povCenterXLayoutProperty;
@@ -70,20 +68,18 @@ public final class JoystickEventProducer implements EventHandler<MouseEvent> {
         produce(toMouseEventWithCartesianPoints(event));
     }
 
-
-    //Private Methods
     private void produce(MouseEvent e) {
-        quadrantBefore = EventUtil.whichQuadrant(beforeX, beforeY);
+        quadrantBefore = whichQuadrant(beforeX, beforeY);
         double afterX = e.getX();
         double afterY = e.getY();
-        QuadrantEnum quadrantAfter = EventUtil.whichQuadrant(afterX, afterY);
-        LevelEnum levelAfter = EventUtil.determineLevel(levelIRadius.get(),levelIIRadius.get() , afterX, afterY);
+        QuadrantEnum quadrantAfter = whichQuadrant(afterX, afterY);
+        int levelAfter = determinLevel(afterX, afterY);
         createEvent(levelAfter, quadrantAfter, e);
         resetToAfter(afterX, afterY, quadrantAfter, levelAfter);
     }
 
-    private void createEvent(LevelEnum level, QuadrantEnum quadrantAfter, MouseEvent e) {
-        if (!level.equals(joystickLevelBefore)) {
+    private void createEvent(int level, QuadrantEnum quadrantAfter, MouseEvent e) {
+        if (!(level == joystickLevelBefore)) {
             node.fireEvent(EventUtil.createEvent(e, JoystickEventEnum.LEVEL_CHANGED, level, quadrantAfter));
         }
         if (!quadrantAfter.equals(quadrantBefore)) {
@@ -92,7 +88,36 @@ public final class JoystickEventProducer implements EventHandler<MouseEvent> {
         node.fireEvent(EventUtil.createEvent(e, JoystickEventEnum.UNDEFINED, level, quadrantAfter));
     }
 
-    private void resetToAfter(double afterX, double afterY, QuadrantEnum quadrantAfter, LevelEnum joystickLevelAfter) {
+    private int determinLevel(double x, double y) {
+        if (y == x && y == 0) {
+            return 0;
+        }
+        return levels.entrySet().stream().filter(e -> MoveCalculatorUtil.isInsideCircleArea(e.getValue().get(), x, y))
+                .max((l, r) -> r.getKey().compareTo(l.getKey()))
+                .get().getKey();
+
+    }
+
+    private QuadrantEnum whichQuadrant(double x, double y) {
+        if (y == x && y == 0) {
+            return QuadrantEnum.NONE;
+        }
+        if (x * y >= 0) {
+            if (x < 0) {
+                return QuadrantEnum.QUADRANT_III;
+            } else {
+                return QuadrantEnum.QUADRANT_I;
+            }
+        } else {
+            if (x > 0) {
+                return QuadrantEnum.QUADRANT_IV;
+            } else {
+                return QuadrantEnum.QUADRANT_II;
+            }
+        }
+    }
+
+    private void resetToAfter(double afterX, double afterY, QuadrantEnum quadrantAfter, int joystickLevelAfter) {
         beforeX = afterX;
         beforeY = afterY;
         joystickLevelBefore = joystickLevelAfter;
@@ -101,10 +126,8 @@ public final class JoystickEventProducer implements EventHandler<MouseEvent> {
 
     private MouseEvent toMouseEventWithCartesianPoints(MouseEvent e) {
         //@formatter:off
-        return new MouseEvent(e.getSource(), e.getTarget(), e.getEventType(),
-                MoveCalculatorUtil.resetToCenterX(povCenterXProperty.get(), povCenterXLayoutProperty.get()),
-                MoveCalculatorUtil.resetToCenterY(povCenterYProperty.get(), povCenterYLayoutProperty.get()),
-                e.getScreenX(), e.getScreenY(), e.getButton(), e.getClickCount(),
+        return new MouseEvent(e.getSource(), e.getTarget(), e.getEventType(), MoveCalculatorUtil.resetToCenterX(povCenterXProperty.get(), povCenterXLayoutProperty.get()), 
+                MoveCalculatorUtil.resetToCenterY(povCenterYProperty.get(), povCenterYLayoutProperty.get()), e.getScreenX(), e.getScreenY(), e.getButton(), e.getClickCount(), 
                 e.isShiftDown(), e.isControlDown(), e.isAltDown(), e.isMetaDown(), e.isPrimaryButtonDown(), 
                 e.isMiddleButtonDown(), e.isSecondaryButtonDown(), e.isSynthesized(), e.isPopupTrigger(), 
                 e.isStillSincePress(), null);

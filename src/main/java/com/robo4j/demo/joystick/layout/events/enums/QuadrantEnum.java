@@ -16,33 +16,45 @@
  *     along with Robo4j and robo4j-joystick .  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.robo4j.demo.joystick.events.enums;
+package com.robo4j.demo.joystick.layout.events.enums;
 
 
 /**
  * @author Choustoulakis Nikolaos (@eppnikos)
+ * @author Miro Kopecky (@miragemiko)
  *
- * @since 25/06/16
+ * @since 25.06.2016
  */
 public enum QuadrantEnum {
-
     // @formatter:off
-    //name          id
-    QUADRANT_I      (1),
-    QUADRANT_II     (2),
-    QUADRANT_III    (3),
-    QUADRANT_IV     (4),
-    NONE            (0),
+    //name          id,     start angle,    end angle
+    NONE            (0,     0,              0),
+    QUADRANT_I      (1,     0,              90),
+    QUADRANT_II     (2,     90,             90),
+    QUADRANT_III    (3,     180,            90),
+    QUADRANT_IV     (4,     270,            90), 
     ;
     // @formatter:on
 
     private int quadrant;
+    private int startAngle;
+    private int angleExtend;
 
-    QuadrantEnum(int q) {
+    private QuadrantEnum(int q, int startAngle, int angleExtend) {
         quadrant = q;
+        this.startAngle = startAngle;
+        this.angleExtend = angleExtend;
     }
 
     public int getQuadrant() {
         return quadrant;
+    }
+
+    public int getAngleExtend() {
+        return angleExtend;
+    }
+
+    public int getStartAngle() {
+        return startAngle;
     }
 }

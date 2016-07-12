@@ -16,9 +16,10 @@
  *     along with Robo4j and robo4j-joystick .  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.robo4j.demo.joystick.events.enums;
+package com.robo4j.demo.joystick.layout.events.enums;
 
-import com.robo4j.demo.joystick.events.JoystickEventHolder;
+import com.robo4j.demo.joystick.layout.events.JoystickEvent;
+
 import javafx.event.EventType;
 import javafx.scene.input.InputEvent;
 
@@ -40,9 +41,9 @@ public enum JoystickEventEnum {
     ;
     //@formatter:on
     private final int id;
-    private final EventType<JoystickEventHolder>  eventType;
+    private final EventType<JoystickEvent>  eventType;
 
-    JoystickEventEnum(int id, EventType<JoystickEventHolder> eventType){
+    JoystickEventEnum(int id, EventType<JoystickEvent> eventType){
         this.id = id;
         this.eventType = eventType;
     }
@@ -51,14 +52,8 @@ public enum JoystickEventEnum {
         return id;
     }
 
-    public EventType<JoystickEventHolder> getEventType() {
+    public EventType<JoystickEvent> getEventType() {
         return eventType;
     }
-
-    //    public static final EventType<JoystickEventHolder> ANY = new EventType<>(InputEvent.ANY, "POV");
-//    public static final EventType<JoystickEventHolder> POV_CHANGE_QUADRANT = new EventType<>(InputEvent.ANY, "POV_CHANGE_QUADRANT");
-//    public static final EventType<JoystickEventHolder> POV_LEVEL_CHANGED = new EventType<>(InputEvent.ANY, "POV_LEVEL_CHANGED");
-
-
 
 }
