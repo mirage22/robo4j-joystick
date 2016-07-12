@@ -18,21 +18,19 @@
 
 package com.robo4j.demo.joystick.layout;
 
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
-import com.robo4j.demo.joystick.layout.events.JoystickEvent;
 import com.robo4j.demo.joystick.layout.events.enums.JoystickEventEnum;
-import com.robo4j.demo.joystick.layout.handlers.PovEventHandler;
 import com.robo4j.demo.joystick.layout.handlers.JoystickEventHandler;
+import com.robo4j.demo.joystick.layout.handlers.PovEventHandler;
 import com.robo4j.demo.joystick.layout.util.JoystickEventProducer;
-
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.input.MouseEvent;
+
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * @author Choustoulakis Nikolaos (@eppnikos)
@@ -61,7 +59,7 @@ public class JoystickController {
         bindingProperties();
         addCanvasListener();
         initHandlers();
-        addPovlistener();
+        addPovListener();
         povEventHandling();
 
         radiusProperty.set(joystick.getRadius());
@@ -119,7 +117,7 @@ public class JoystickController {
         povEventHandler = new PovEventHandler();
     }
 
-    private void addPovlistener() {
+    private void addPovListener() {
         joystick.getPov().addEventHandler(MouseEvent.MOUSE_DRAGGED,
                 (e) -> povEventHandler.draggedPov(e, joystick.getPov(),
                         radiusProperty, povCenterXProperty, povCenterYProperty));

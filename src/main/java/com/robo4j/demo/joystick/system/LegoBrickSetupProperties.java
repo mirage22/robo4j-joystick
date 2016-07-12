@@ -27,11 +27,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Default Robot configuration
- *
- * note: Commands and sensor options are not required for the demo
  * @author Miro Kopecky (@miragemiko)
- * @since 25/04/16.
+ *
+ * @since 12.05.2016
  */
 
 @SystemProperties
@@ -39,14 +37,20 @@ public class LegoBrickSetupProperties implements LegoBrickProperties, RoboSystem
 
     private Map<String, String> bricks;
     private String corePackage;
+    private String commandPackage;
     private String enginePackage;
+    private String sensorPackage;
+    private String unitPackage;
 
     public LegoBrickSetupProperties() {
         final Map<String, String> bricks = new HashMap<>();
-        bricks.put(LegoBrickPropertiesHolder.BRICK_IP_1, "<ROBOT_IP>");
+        bricks.put(LegoBrickPropertiesHolder.BRICK_IP_1, "<ROBO_IP>");
         this.bricks = bricks;
         this.corePackage = "com.robo4j.demo.joystick";
+        this.commandPackage = "com.robo4j.demo.joystick.commands";
         this.enginePackage = "com.robo4j.demo.joystick.engine";
+        this.sensorPackage = "com.robo4j.demo.joystick.sensor";
+        this.unitPackage = "com.robo4j.demo.joystick.unit";
     }
 
     @Override
@@ -61,7 +65,7 @@ public class LegoBrickSetupProperties implements LegoBrickProperties, RoboSystem
 
     @Override
     public String getCommandPackage() {
-        return null;
+        return commandPackage;
     }
 
     @Override
@@ -71,15 +75,20 @@ public class LegoBrickSetupProperties implements LegoBrickProperties, RoboSystem
 
     @Override
     public String getSensorPackage() {
-        return null;
+        return sensorPackage;
+    }
+
+    @Override
+    public String getUnitPackage() {
+        return unitPackage;
     }
 
     @Override
     public String toString() {
-        return "LegoBrickSetupProperties{" +
+        return "LegoBrickPropertiesTest{" +
                 "bricks=" + bricks +
                 ", corePackage='" + corePackage + '\'' +
-                ", enginePackage='" + enginePackage + '\'' +
+                ", commandPackage='" + commandPackage + '\'' +
                 '}';
     }
 }

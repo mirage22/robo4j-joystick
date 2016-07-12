@@ -19,8 +19,9 @@
 package com.robo4j.demo.joystick;
 
 import com.robo4j.core.control.ControlPad;
-import com.robo4j.demo.joystick.events.enums.JoystickEventEnum;
-import com.robo4j.demo.joystick.layout.JoystickPane;
+import com.robo4j.demo.joystick.layout.Joystick;
+import com.robo4j.demo.joystick.layout.events.enums.JoystickEventEnum;
+import com.robo4j.demo.joystick.layout.events.enums.JoystickLevelEnum;
 import com.robo4j.demo.joystick.task.RoboAddressTask;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -28,35 +29,31 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- * Main Class of the Robo4j-joystick JavaFx demo
- *
- * initiation of:
- *  1. JavaFx Application
- *     joystick logic and related JavaFx features
- *
- *  2. Robo4j controlPad
- *     initation of core robot logic and resources
- *
- *
- * @author Choustoulakis Nikolaos (@eppnikos)
  * @author Miro Kopecky (@miragemiko)
  *
- * @since 25/06/16
+ * @since 24.04.2016
  */
-
 public class Robo4jJoystickMain extends Application {
-    private static final String NOT_AVAILABLE = "NOT AVAILABLE";
     private static final Logger logger = LoggerFactory.getLogger(Robo4jJoystickMain.class);
     private static final int ROTATION_ANGEL = 90;
+    private static final String NOT_AVAILABLE = "NOT AVAILABLE";
+    private static final String NOT_CONNECTED = "BRICK IS NOT CONNECTED";
     private static final String CONNECT = "Connect";
     private static final String CLOSE = "Close";
 
@@ -64,62 +61,101 @@ public class Robo4jJoystickMain extends Application {
     private StringProperty ipLabelProperty;
     private Label connectLabel;
     private Button buttonConnect;
+    private GridPane gridOptions;
+
+    //Speed Properties
+    private Map<Integer, TextField> speedFieldMap;
+    private Map<Integer, String> speedBasicValues;
+    private Map<Integer, StringProperty> speedPropertyMap;
 
 
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        this.controlPad = new ControlPad("com.robo4j.demo.joystick");
-        this.ipLabelProperty = new SimpleStringProperty();
 
-        BorderPane borderPane = new BorderPane();
-
-        HBox hBox = getHBox();
-        borderPane.setTop(hBox);
-
-        JoystickPane joystickPane = new JoystickPane(ROTATION_ANGEL);
-        joystickPane.addEventHandler(JoystickEventEnum.QUADRANT_CHANGED.getEventType(), e -> {
-            switch (e.getQuadrant()){
-                case NONE:
-                    controlPad.sendCommandLine("A:stop");
-                    break;
-                case QUADRANT_I:
-                    controlPad.sendCommandLine("A:right");
-                    break;
-                case QUADRANT_II:
-                    controlPad.sendCommandLine("A:back");
-                    break;
-                case QUADRANT_III:
-                    controlPad.sendCommandLine("A:left");
-                    break;
-                case QUADRANT_IV:
-                    controlPad.sendCommandLine("A:move");
-                    break;
-                default:
-                    throw new IllegalStateException("no such quadrant");
-            }
-        });
-        joystickPane.addEventHandler(JoystickEventEnum.LEVEL_CHANGED.getEventType(),
-                e -> logger.info("LEVEL" +  e.getJoystickLevel()));
-        borderPane.setCenter(joystickPane);
-
-        primaryStage.setScene(new Scene(borderPane));
-        primaryStage.setTitle("Robo4j-Joystick Canvas");
-        primaryStage.show();
-
-    }
-
+    private int speed;
+    private String quadrant;
 
     public static void main(String... args) {
         launch(args);
     }
 
+    @Override
+    public void start(Stage primaryStage) throws Exception {
 
+        this.controlPad = new ControlPad("com.robo4j.demo.joystick");
+        this.ipLabelProperty = new SimpleStringProperty();
+        /* default speed */
+        this.speed = 100;
+        this.quadrant = "";
+
+        speedBasicValues = getSpeedBasic();
+
+        GridPane borderPane = new GridPane();
+        gridOptions = getOptions();
+
+
+        borderPane.add(getHBox(), 0, 0);
+        borderPane.add(gridOptions, 0, 1);
+        borderPane.add(getJoystickPane(), 0, 2);
+
+        primaryStage.setScene(new Scene(borderPane));
+        primaryStage.setTitle("Magic Scene");
+        primaryStage.show();
+
+    }
 
     //Private Methdos
+    private void displayAlertDialog(String text){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Robo4j ERROR");
+        alert.setContentText(text);
+        alert.showAndWait();
+    }
+
+    private BorderPane getJoystickPane(){
+        BorderPane result = new BorderPane();
+        result.setPadding(new Insets(15, 12, 15, 12));
+        Joystick joystickPane = new Joystick(ROTATION_ANGEL, JoystickLevelEnum.values().length);
+        joystickPane.addEventHandler(JoystickEventEnum.QUADRANT_CHANGED.getEventType(), e -> {
+            if(!controlPad.isActive()){
+                displayAlertDialog(NOT_CONNECTED);
+            } else {
+                switch (e.getQuadrant()){
+                    case NONE:
+                        quadrant = "stop";
+                        break;
+                    case QUADRANT_I:
+                        quadrant = "left";
+                        break;
+                    case QUADRANT_II:
+                        quadrant = "move";
+                        break;
+                    case QUADRANT_III:
+                        quadrant = "right";
+                        break;
+                    case QUADRANT_IV:
+                        quadrant = "back";
+                        break;
+                }
+                controlPad.sendCommandLine("A:"+quadrant+"("+speed+")");
+            }
+
+        });
+
+        joystickPane.addEventHandler(JoystickEventEnum.LEVEL_CHANGED.getEventType(), e -> {
+            if(!controlPad.isActive()){
+                displayAlertDialog(NOT_CONNECTED);
+            } else {
+                speed = Integer.parseInt(speedPropertyMap.get(e.getJoystickLevel().getLevel()).getValue());
+                controlPad.sendCommandLine("A:"+quadrant+"("+speed+")");
+            }
+
+        });
+        result.setCenter(joystickPane);
+        return result;
+    }
 
     private HBox getHBox(){
         HBox result = new HBox();
-        result.setPadding(new Insets(15, 12, 15, 12));
+        result.setPadding(new Insets(15, 12, 2, 12));
         result.setSpacing(10); // Gap between nodes
         result.setStyle("-fx-background-color: #336699;");
 
@@ -127,40 +163,83 @@ public class Robo4jJoystickMain extends Application {
         buttonConnect.setPrefSize(100, 20);
         buttonConnect.setOnAction((event) -> handleConnectButtonOnAction());
 
+        Button buttonOptions = new Button("Opt");
+        buttonOptions.setPrefSize(60, 20);
+        buttonOptions.setOnAction((event) -> handleOptionButtonOnAction());
+
 
         connectLabel = new Label();
         connectLabel.setPrefSize(150, 20);
         connectLabel.setText("IP ADDRESS");
-
-
-        result.getChildren().addAll(buttonConnect, connectLabel);
+        result.getChildren().addAll(buttonConnect, buttonOptions, connectLabel);
 
         return result;
     }
 
+    private Map<Integer, String> getSpeedBasic(){
+        final Map<Integer, String> result = new HashMap<>();
+        result.put(1, "200");
+        result.put(2, "500");
+        result.put(3, "800");
+        return result;
+    }
+
+    private GridPane getOptions(){
+        GridPane result = new GridPane();
+        result.setPadding(new Insets(2, 12, 10, 12));
+        result.setStyle("-fx-background-color: #336699;");
+        speedPropertyMap = new HashMap<>();
+        speedPropertyMap.put(0, new SimpleStringProperty("100"));
+
+        speedFieldMap = new HashMap<>();
+        result.add(new Text("Speed by Levels(Degrees/sec):"), 0, 0);
+        for(int i = 1; i < JoystickLevelEnum.values().length; i++){
+            result.add( new Text("Lave"+ i +":"), 0, i);
+            TextField speedField = new TextField();
+            SimpleStringProperty simpleProperty = new SimpleStringProperty(speedBasicValues.get(i));
+            speedField.setText(speedBasicValues.get(i));
+            speedField.setPrefColumnCount(5);
+            speedFieldMap.put(i, speedField);
+            speedPropertyMap.put(i, simpleProperty);
+            result.add(speedFieldMap.get(i), 1, i);
+        }
+        return result;
+    }
+
+
+    private void handleOptionButtonOnAction(){
+        if(gridOptions.isVisible()) {
+            gridOptions.setVisible(false);
+            speedFieldMap.entrySet().stream()
+                    .forEach(e -> {
+                        speedBasicValues.replace(e.getKey(), e.getValue().getText());
+                        speedPropertyMap.get(e.getKey()).setValue(e.getValue().getText());
+                    });
+        } else {
+            gridOptions.setVisible(true);
+
+        }
+    }
     private void handleConnectButtonOnAction(){
         final boolean available = controlPad.getConnectionState();
-        if(!available){
-            connectLabel.setText(NOT_AVAILABLE);
-        }
-
         if(!controlPad.isActive() && available){
             controlPad.activate();
             connectLabel.textProperty().bind(ipLabelProperty);
-            Platform.runLater(this::runAsyncLabelUpdate);
             buttonConnect.setText(CLOSE);
+
+            Platform.runLater(this::runAsyncLabelUpdate);
         } else if(controlPad.isActive()){
             controlPad.sendCommandLine("A:exit");
             buttonConnect.setText(CONNECT);
-
         } else {
             logger.info(NOT_AVAILABLE);
+            displayAlertDialog(NOT_AVAILABLE);
         }
+
+
     }
 
-    /**
-     * submitting task to the internal Robo4j bus
-     */
+
     private void runAsyncLabelUpdate(){
         final RoboAddressTask updateIpLabel = new RoboAddressTask(controlPad);
         ipLabelProperty.bind(updateIpLabel.messageProperty());

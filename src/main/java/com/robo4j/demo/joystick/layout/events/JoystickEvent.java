@@ -19,10 +19,9 @@
 package com.robo4j.demo.joystick.layout.events;
 
 import com.robo4j.demo.joystick.layout.events.enums.JoystickEventEnum;
+import com.robo4j.demo.joystick.layout.events.enums.JoystickLevelEnum;
 import com.robo4j.demo.joystick.layout.events.enums.QuadrantEnum;
-
 import javafx.event.EventTarget;
-import javafx.event.EventType;
 import javafx.scene.input.InputEvent;
 
 /**
@@ -39,12 +38,12 @@ public class JoystickEvent extends InputEvent {
     private transient double x;
     private transient double y;
     private transient QuadrantEnum quadrant;
-    private transient int joystickLevel;
+    private transient JoystickLevelEnum joystickLevel;
 
     public JoystickEvent(Object source, EventTarget target,
                          JoystickEventEnum eventType,
                          double x, double y, QuadrantEnum quadrant,
-                         int joystickLevel) {
+                         JoystickLevelEnum joystickLevel) {
         super(source, target, eventType.getEventType());
         this.x = x;
         this.y = y;
@@ -64,9 +63,18 @@ public class JoystickEvent extends InputEvent {
         return quadrant;
     }
 
-    public final int getJoystickLevel() {
+    public final JoystickLevelEnum getJoystickLevel() {
         return joystickLevel;
     }
 
 
+    @Override
+    public String toString() {
+        return "JoystickEvent{" +
+                "x=" + x +
+                ", y=" + y +
+                ", quadrant=" + quadrant +
+                ", joystickLevel=" + joystickLevel +
+                '}';
+    }
 }

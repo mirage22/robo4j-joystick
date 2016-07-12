@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2016. Miroslav Kopecky
- * This RadarEventHandler.java is part of Robo4j and robo4j-joystick
+ * This JoystickEventHandler.java is part of Robo4j and robo4j-joystick
  *
  *     robo4j-joystick is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -18,10 +18,8 @@
 
 package com.robo4j.demo.joystick.layout.handlers;
 
-import java.util.Map;
-
 import com.robo4j.demo.joystick.layout.events.JoystickEvent;
-
+import com.robo4j.demo.joystick.layout.events.enums.JoystickLevelEnum;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.scene.canvas.Canvas;
@@ -30,8 +28,23 @@ import javafx.scene.input.ZoomEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
 import javafx.scene.shape.Circle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Map;
+
+
+/**
+ * @author Choustoulakis Nikolaos (@eppnikos)
+ * @author Miro Kopecky (@miragemiko)
+ *
+ * @since 28.06.2016
+ */
 
 public class JoystickEventHandler {
+    private static final Logger logger = LoggerFactory.getLogger(JoystickEventHandler.class);
+    private static final int ANGLE_360 = 360;
+    private static final int MULTIPLIER = 2;
 
     public void onMouseDragged(Circle pov, DoubleProperty povCenteXProperty, DoubleProperty povCenteYProperty) {
         pov.setCenterX(povCenteXProperty.get());
@@ -46,16 +59,16 @@ public class JoystickEventHandler {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         drawCircles(canvas, radiusProperty, levels, levels.size());
         //@formatter:off
-        gc.setFill(Color.RED);
+        gc.setFill(Color.YELLOW);
         gc.fillArc(
-                radiusProperty.get() - levels.get(e.getJoystickLevel()).get(), 
-                radiusProperty.get() - levels.get(e.getJoystickLevel()).get(), 
-                levels.get(e.getJoystickLevel()).get() * 2,
-                levels.get(e.getJoystickLevel()).get() * 2,
+                radiusProperty.get() - levels.get(getJoystickLevel(e.getJoystickLevel())).get(),
+                radiusProperty.get() - levels.get(getJoystickLevel(e.getJoystickLevel())).get(),
+                levels.get(getJoystickLevel(e.getJoystickLevel())).get() * MULTIPLIER,
+                levels.get(getJoystickLevel(e.getJoystickLevel())).get() * MULTIPLIER,
                 e.getQuadrant().getStartAngle(), 
                 e.getQuadrant().getAngleExtend(), ArcType.ROUND);
         //@formatter:on
-        draw(canvas, radiusProperty, levels, e.getJoystickLevel());
+        draw(canvas, radiusProperty, levels, e.getJoystickLevel().getLevel());
     }
 
     public void drawCircles(Canvas canvas, DoubleProperty radiusProperty, Map<Integer, IntegerProperty> levels, int levelNumber) {
@@ -68,12 +81,32 @@ public class JoystickEventHandler {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         levels.entrySet().stream().filter(e -> e.getKey() < levelNumber).sorted((l, r) -> Integer.compare(r.getValue().get(), l.getValue().get()))
                 .forEach(i -> {
-                    gc.setFill(Color.GRAY);
-                    gc.setStroke(Color.BLACK);
+                    switch (i.getKey()){
+                        case 0:
+                            gc.setFill(Color.YELLOWGREEN);
+                            break;
+                        case 1:
+                            gc.setFill(Color.ROYALBLUE);
+                            break;
+                        case 2:
+                            gc.setFill(Color.STEELBLUE);
+                            break;
+                        case 3:
+                            gc.setFill(Color.SKYBLUE);
+                            break;
+
+                    }
+
+                    gc.setStroke(Color.DARKBLUE);
                     double position = radiusProperty.get() - i.getValue().get();
-                    int size = i.getValue().get() * 2;
+                    int size = i.getValue().get() * MULTIPLIER;
                     gc.fillOval(position, position, size, size);
-                    gc.strokeArc(position, position, size, size, 0, 360, ArcType.CHORD);
+                    gc.strokeArc(position, position, size, size, 0, ANGLE_360, ArcType.CHORD);
                 });
+    }
+
+    //Private Methods
+    private int getJoystickLevel(JoystickLevelEnum levelEnum){
+        return levelEnum.getLevel();
     }
 }

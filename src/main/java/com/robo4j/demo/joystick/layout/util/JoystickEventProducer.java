@@ -18,17 +18,15 @@
 
 package com.robo4j.demo.joystick.layout.util;
 
-import java.util.Map;
-
-import com.robo4j.demo.joystick.layout.events.JoystickEvent;
 import com.robo4j.demo.joystick.layout.events.enums.JoystickEventEnum;
 import com.robo4j.demo.joystick.layout.events.enums.QuadrantEnum;
-
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
+
+import java.util.Map;
 
 /**
  * Joystick logic
@@ -126,8 +124,8 @@ public final class JoystickEventProducer implements EventHandler<MouseEvent> {
 
     private MouseEvent toMouseEventWithCartesianPoints(MouseEvent e) {
         //@formatter:off
-        return new MouseEvent(e.getSource(), e.getTarget(), e.getEventType(), MoveCalculatorUtil.resetToCenterX(povCenterXProperty.get(), povCenterXLayoutProperty.get()), 
-                MoveCalculatorUtil.resetToCenterY(povCenterYProperty.get(), povCenterYLayoutProperty.get()), e.getScreenX(), e.getScreenY(), e.getButton(), e.getClickCount(), 
+        return new MouseEvent(e.getSource(), e.getTarget(), e.getEventType(), MoveCalculatorUtil.resetToCenterX(povCenterXProperty.get(), povCenterXLayoutProperty.get()),
+                MoveCalculatorUtil.resetToCenterY(povCenterYProperty.get(), povCenterYLayoutProperty.get()), e.getScreenX(), e.getScreenY(), e.getButton(), e.getClickCount(),
                 e.isShiftDown(), e.isControlDown(), e.isAltDown(), e.isMetaDown(), e.isPrimaryButtonDown(), 
                 e.isMiddleButtonDown(), e.isSecondaryButtonDown(), e.isSynthesized(), e.isPopupTrigger(), 
                 e.isStillSincePress(), null);

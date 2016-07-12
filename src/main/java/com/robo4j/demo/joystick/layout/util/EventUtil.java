@@ -20,6 +20,7 @@ package com.robo4j.demo.joystick.layout.util;
 
 import com.robo4j.demo.joystick.layout.events.JoystickEvent;
 import com.robo4j.demo.joystick.layout.events.enums.JoystickEventEnum;
+import com.robo4j.demo.joystick.layout.events.enums.JoystickLevelEnum;
 import com.robo4j.demo.joystick.layout.events.enums.QuadrantEnum;
 import javafx.scene.input.MouseEvent;
 
@@ -29,8 +30,10 @@ import javafx.scene.input.MouseEvent;
  */
 public class EventUtil {
 
-    public static JoystickEvent createEvent(MouseEvent e, JoystickEventEnum joystickEvent, int level, QuadrantEnum quadrantAfter){
+    public static JoystickEvent createEvent(MouseEvent e, JoystickEventEnum joystickEvent, int levelNumber, QuadrantEnum quadrantAfter){
         return new JoystickEvent(e.getSource(),
-                e.getTarget(), joystickEvent, e.getX(), e.getY(), quadrantAfter, level);
+                e.getTarget(), joystickEvent, e.getX(), e.getY(), quadrantAfter,
+                JoystickLevelEnum.getJoystickLevelByCode(levelNumber));
     }
 }
+

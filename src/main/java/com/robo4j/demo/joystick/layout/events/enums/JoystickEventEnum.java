@@ -19,7 +19,6 @@
 package com.robo4j.demo.joystick.layout.events.enums;
 
 import com.robo4j.demo.joystick.layout.events.JoystickEvent;
-
 import javafx.event.EventType;
 import javafx.scene.input.InputEvent;
 
