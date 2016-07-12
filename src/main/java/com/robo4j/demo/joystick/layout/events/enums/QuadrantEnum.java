@@ -34,7 +34,7 @@ public enum QuadrantEnum {
     QUADRANT_III    (3,     180,            90),
     QUADRANT_IV     (4,     270,            90), 
     ;
-// @formatter:on
+    // @formatter:on
 
     private int quadrant;
     private int startAngle;
