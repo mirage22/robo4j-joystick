@@ -18,13 +18,19 @@
 
 package com.robo4j.demo.joystick;
 
-import com.robo4j.core.control.ControlPad;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.robo4j.core.logging.SimpleLoggingUtil;
 import com.robo4j.demo.joystick.layout.Joystick;
 import com.robo4j.demo.joystick.layout.events.enums.JoystickEventEnum;
 import com.robo4j.demo.joystick.layout.events.enums.JoystickLevelEnum;
 import com.robo4j.demo.joystick.task.RoboAddressTask;
+
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
@@ -38,11 +44,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Miro Kopecky (@miragemiko)
@@ -57,7 +58,6 @@ public class Robo4jJoystickMain extends Application {
     private static final String CONNECT = "Connect";
     private static final String CLOSE = "Close";
 
-    private ControlPad controlPad;
     private StringProperty ipLabelProperty;
     private Label connectLabel;
     private Button buttonConnect;
@@ -80,7 +80,6 @@ public class Robo4jJoystickMain extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        this.controlPad = new ControlPad("com.robo4j.demo.joystick");
         this.ipLabelProperty = new SimpleStringProperty();
         /* default speed */
         this.speed = 100;
@@ -115,9 +114,7 @@ public class Robo4jJoystickMain extends Application {
         result.setPadding(new Insets(15, 12, 15, 12));
         Joystick joystickPane = new Joystick(ROTATION_ANGEL, JoystickLevelEnum.values().length);
         joystickPane.addEventHandler(JoystickEventEnum.QUADRANT_CHANGED.getEventType(), e -> {
-            if(!controlPad.isActive()){
-                displayAlertDialog(NOT_CONNECTED);
-            } else {
+
                 switch (e.getQuadrant()){
                     case NONE:
                         quadrant = "stop";
@@ -135,19 +132,10 @@ public class Robo4jJoystickMain extends Application {
                         quadrant = "back";
                         break;
                 }
-                controlPad.sendCommandLine("A:"+quadrant+"("+speed+")");
-            }
-
         });
 
         joystickPane.addEventHandler(JoystickEventEnum.LEVEL_CHANGED.getEventType(), e -> {
-            if(!controlPad.isActive()){
-                displayAlertDialog(NOT_CONNECTED);
-            } else {
-                speed = Integer.parseInt(speedPropertyMap.get(e.getJoystickLevel().getLevel()).getValue());
-                controlPad.sendCommandLine("A:"+quadrant+"("+speed+")");
-            }
-
+            System.out.println(getClass().getSimpleName() + " quadrant: " + quadrant + " speed: " + speed);
         });
         result.setCenter(joystickPane);
         return result;
@@ -221,29 +209,14 @@ public class Robo4jJoystickMain extends Application {
         }
     }
     private void handleConnectButtonOnAction(){
-        final boolean available = controlPad.getConnectionState();
-        if(!controlPad.isActive() && available){
-            controlPad.activate();
-            connectLabel.textProperty().bind(ipLabelProperty);
-            buttonConnect.setText(CLOSE);
-
-            Platform.runLater(this::runAsyncLabelUpdate);
-        } else if(controlPad.isActive()){
-            controlPad.sendCommandLine("A:exit");
-            buttonConnect.setText(CONNECT);
-        } else {
-            logger.info(NOT_AVAILABLE);
-            displayAlertDialog(NOT_AVAILABLE);
-        }
-
+        SimpleLoggingUtil.print(getClass(), "handle connect");
 
     }
 
 
     private void runAsyncLabelUpdate(){
-        final RoboAddressTask updateIpLabel = new RoboAddressTask(controlPad);
+        final RoboAddressTask updateIpLabel = new RoboAddressTask("magic happens");
         ipLabelProperty.bind(updateIpLabel.messageProperty());
-        controlPad.executeToSensorBus(updateIpLabel);
 
     }
 

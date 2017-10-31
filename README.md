@@ -5,7 +5,7 @@ This demo is the part of [Robo4j.io][] project.
 
 
 used libraries:
-* [Robo4j.io][] :: version: alfa-0.2
+* [Robo4j.io][] :: version: alfa-0.3
 
 ## Requirements
 * robo4j-core library in local maven repository

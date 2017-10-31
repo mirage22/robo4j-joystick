@@ -18,10 +18,7 @@
 
 package com.robo4j.demo.joystick.task;
 
-import com.robo4j.core.control.ControlPad;
 import javafx.concurrent.Task;
-
-import java.util.function.Supplier;
 
 /**
  * JavaFx task checking IPAddress
@@ -30,21 +27,17 @@ import java.util.function.Supplier;
  */
 public class RoboAddressTask extends Task<String> {
 
-    private ControlPad controlPad;
+    private String controlPad;
 
-    public RoboAddressTask(ControlPad controlPad) {
+    public RoboAddressTask(String controlPad) {
         this.controlPad = controlPad;
     }
 
     @Override
     protected String call() throws Exception {
-        final String result = updateMessage(controlPad).get();
+        final String result = controlPad;
         updateMessage(result);
         return result;
     }
 
-    //Private Methods
-    private static Supplier<String> updateMessage(final ControlPad controlPad){
-        return () -> controlPad.getConnectionState() ? controlPad.getIpAddress() : "NOT AVAILABLE";
-    }
 }
